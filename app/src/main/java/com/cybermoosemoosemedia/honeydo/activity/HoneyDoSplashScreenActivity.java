@@ -24,8 +24,6 @@ public class HoneyDoSplashScreenActivity extends Activity {
 
                 @Override
                 public void run() {
-                    // this method will be executed once the timer is over
-                    // start the app main activity
                     Intent i = new Intent(HoneyDoSplashScreenActivity.this, HoneyDoListActivity.class);
                     startActivity(i);
 

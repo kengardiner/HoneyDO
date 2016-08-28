@@ -29,7 +29,7 @@ public class HoneyDoCursorAdapter extends SimpleCursorAdapter {
             holder.listTab = view.findViewById(R.id.row_tab);
             view.setTag(holder);
         }if (cursor.getInt(holder.colImp) > 0) {
-            holder.listTab.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
+            holder.listTab.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
         } else {
             holder.listTab.setBackgroundColor(ContextCompat.getColor(context, R.color.green));
         }

@@ -11,15 +11,21 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
-import com.cybermoosemoosemedia.honeydo.db.HoneyDoCursorAdapter;
-import com.cybermoosemoosemedia.honeydo.db.HoneyDoRemindersDbAdapter;
 import com.cybermoosemoosemedia.honeydo.R;
+import com.cybermoosemoosemedia.honeydo.db.HoneyDoCursorAdapter;
 import com.cybermoosemoosemedia.honeydo.db.HoneyDoDataModel;
+import com.cybermoosemoosemedia.honeydo.db.HoneyDoRemindersDbAdapter;
 
 public class HoneyDoListActivity extends Activity {
     private ListView mListView;
@@ -30,12 +36,7 @@ public class HoneyDoListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_honey_do_list);
-//        ActionBar actionBar = getSupportActionBar();
-//        actionBar.setHomeButtonEnabled(true);
-//        actionBar.setDisplayShowHomeEnabled(true);
-//        actionBar.setIcon(R.mipmap.ic_launcher);
         mListView = (ListView) findViewById(R.id.reminders_list_view);
-        mListView.setDivider(null);
         mDbAdapter = new HoneyDoRemindersDbAdapter(this);
         mDbAdapter.open();
         if (savedInstanceState == null) {
@@ -76,7 +77,7 @@ public class HoneyDoListActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, final int masterListPosition, long id) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(HoneyDoListActivity.this);
                 ListView modeListView = new ListView(HoneyDoListActivity.this);
-                String[] modes = new String[]{"Edit HoneyDoDataModel", "Delete HoneyDoDataModel"};
+                String[] modes = new String[]{"Edit Entry", "Delete Entry"};
                 ArrayAdapter<String> modeAdapter = new ArrayAdapter<>(HoneyDoListActivity.this,
                         android.R.layout.simple_list_item_1, android.R.id.text1, modes);
                 modeListView.setAdapter(modeAdapter);
@@ -90,7 +91,7 @@ public class HoneyDoListActivity extends Activity {
                         if (position == 0) {
                             int nId = getIdFromPosition(masterListPosition);
                             HoneyDoDataModel honeyDoDataModel = mDbAdapter.fetchReminderById(nId);
-                      //      fireCustomDialog(honeyDoDataModel);
+                            fireCustomDialog(honeyDoDataModel);
                             //delete honeyDoDataModel
                         } else {
                             mDbAdapter.deleteReminderById(getIdFromPosition(masterListPosition));
@@ -169,7 +170,7 @@ public class HoneyDoListActivity extends Activity {
 
     }
 
-/*    private void fireCustomDialog(final HoneyDoDataModel reminder) {
+    private void fireCustomDialog(final HoneyDoDataModel reminder) {
 
 
 
@@ -185,14 +186,14 @@ public class HoneyDoListActivity extends Activity {
         final boolean isEditOperation = (reminder != null);
         //this is for an edit
         if (isEditOperation) {
-            titleView.setText("Edit HoneyDoDataModel");
+            titleView.setText("Edit Item");
             checkBox.setChecked(reminder.getImportant() == 1);
             editCustom.setText(reminder.getContent());
-            rootLayout.setBackgroundColor(getResources().getColor(R.color.blue));
+            rootLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
         }
-*/
 
-      /*  commitButton.setOnClickListener(new View.OnClickListener() {
+
+      commitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String reminderText = editCustom.getText().toString();
@@ -207,10 +208,10 @@ public class HoneyDoListActivity extends Activity {
                 mCursorAdapter.changeCursor(mDbAdapter.fetchAllReminders());
                 dialog.dismiss();
             }
-        });*/
+        });
 
 
-/*        Button buttonCancel = (Button) dialog.findViewById(R.id.custom_button_cancel);
+      Button buttonCancel = (Button) dialog.findViewById(R.id.custom_button_cancel);
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,7 +219,7 @@ public class HoneyDoListActivity extends Activity {
             }
         });
         dialog.show();
-    }*/
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
