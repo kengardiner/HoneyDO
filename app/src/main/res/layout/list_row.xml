@@ -8,30 +8,30 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
+        android:background="?android:attr/activatedBackgroundIndicator"
         android:layout_height="match_parent">
 
         <view
-            android:layout_width="10dp"
-            android:layout_height="match_parent"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             class="android.view.View"
             android:id="@+id/row_tab"
-            android:layout_marginBottom="5dp" />
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/green_circle" />
 
-        <Button
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Sample Text"
-            android:id="@+id/row_text"
-            android:layout_gravity="center_horizontal"
+            android:text="Reminder Text"
             android:background="@drawable/list_button"
-            android:textColor="#283593"
-            android:layout_marginTop="5dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="10dp"
+            android:id="@+id/row_text"
+            android:textColor="@color/Indigo"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:textAlignment="center" />
-
+            android:gravity="center_vertical"
+            android:padding="10dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

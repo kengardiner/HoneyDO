@@ -39,12 +39,12 @@ public class HoneyDoListActivity extends Activity {
         mListView = (ListView) findViewById(R.id.reminders_list_view);
         mDbAdapter = new HoneyDoRemindersDbAdapter(this);
         mDbAdapter.open();
-        if (savedInstanceState == null) {
+/*        if (savedInstanceState == null) {
             //Clear all data
-            mDbAdapter.deleteAllReminders();
+           mDbAdapter.deleteAllReminders();
             //Add some data
             insertSomeReminders();
-        }
+        }*/
 
 
         Cursor cursor = mDbAdapter.fetchAllReminders();
@@ -173,7 +173,6 @@ public class HoneyDoListActivity extends Activity {
     private void fireCustomDialog(final HoneyDoDataModel reminder) {
 
 
-
         // custom dialog
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -193,7 +192,7 @@ public class HoneyDoListActivity extends Activity {
         }
 
 
-      commitButton.setOnClickListener(new View.OnClickListener() {
+        commitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String reminderText = editCustom.getText().toString();
@@ -211,7 +210,7 @@ public class HoneyDoListActivity extends Activity {
         });
 
 
-      Button buttonCancel = (Button) dialog.findViewById(R.id.custom_button_cancel);
+        Button buttonCancel = (Button) dialog.findViewById(R.id.custom_button_cancel);
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -219,6 +218,16 @@ public class HoneyDoListActivity extends Activity {
             }
         });
         dialog.show();
+
+
+    }
+
+    public void onAddItem(View v) {
+        EditText etNewItem = (EditText) findViewById(R.id.editText);
+        String itemText = etNewItem.getText().toString();
+        mDbAdapter.createReminder(itemText, true);
+        mCursorAdapter.changeCursor(mDbAdapter.fetchAllReminders());
+        etNewItem.setText("");
     }
 
     @Override
@@ -227,6 +236,8 @@ public class HoneyDoListActivity extends Activity {
         getMenuInflater().inflate(R.menu.menu_reminders, menu);
         return true;
     }
+
+
 
 
     @Override

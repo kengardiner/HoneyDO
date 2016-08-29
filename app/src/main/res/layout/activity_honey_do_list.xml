@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".activity.HoneyDoListActivity"
     android:background="@drawable/list_bg_gradient"
     >
@@ -10,22 +11,48 @@
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/reminders_list_view"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         tools:listitem="@layout/list_row"
         android:divider="#000000"
         android:dividerHeight="4dp"
-        android:drawSelectorOnTop="true" />
+        android:drawSelectorOnTop="true"
+        android:layout_weight="2" />
 
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/button"
-        android:background="@android:drawable/ic_input_add"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true">
 
-</RelativeLayout>
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText"
+            android:hint="Enter a new item"
+            android:textColorHint="@color/Black"
+            android:layout_alignParentStart="true"
+            android:layout_above="@+id/button"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/Indigo"
+            android:layout_weight="2" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Item"
+            android:id="@+id/addBtn"
+            android:onClick="onAddItem"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+</LinearLayout>
