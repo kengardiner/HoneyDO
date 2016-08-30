@@ -1,11 +1,13 @@
 package com.cybermoosemoosemedia.honeydo.activity;
 
-import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,16 +23,18 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.DatePicker;
 
 import com.cybermoosemoosemedia.honeydo.R;
 import com.cybermoosemoosemedia.honeydo.db.HoneyDoCursorAdapter;
 import com.cybermoosemoosemedia.honeydo.db.HoneyDoDataModel;
 import com.cybermoosemoosemedia.honeydo.db.HoneyDoRemindersDbAdapter;
 
-public class HoneyDoListActivity extends Activity {
+public class HoneyDoListActivity extends FragmentActivity implements DatePickerDialog.OnDateSetListener {
     private ListView mListView;
     private HoneyDoRemindersDbAdapter mDbAdapter;
     private HoneyDoCursorAdapter mCursorAdapter;
+    DatePickerFragment newFragment = new DatePickerFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,8 @@ public class HoneyDoListActivity extends Activity {
         mListView = (ListView) findViewById(R.id.reminders_list_view);
         mDbAdapter = new HoneyDoRemindersDbAdapter(this);
         mDbAdapter.open();
+
+
 /*        if (savedInstanceState == null) {
             //Clear all data
            mDbAdapter.deleteAllReminders();
@@ -77,7 +83,7 @@ public class HoneyDoListActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, final int masterListPosition, long id) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(HoneyDoListActivity.this);
                 ListView modeListView = new ListView(HoneyDoListActivity.this);
-                String[] modes = new String[]{"Edit Entry", "Delete Entry"};
+                String[] modes = new String[]{"Edit Entry", "Delete Entry", "Add Due Date"};
                 ArrayAdapter<String> modeAdapter = new ArrayAdapter<>(HoneyDoListActivity.this,
                         android.R.layout.simple_list_item_1, android.R.id.text1, modes);
                 modeListView.setAdapter(modeAdapter);
@@ -92,10 +98,13 @@ public class HoneyDoListActivity extends Activity {
                             int nId = getIdFromPosition(masterListPosition);
                             HoneyDoDataModel honeyDoDataModel = mDbAdapter.fetchReminderById(nId);
                             fireCustomDialog(honeyDoDataModel);
-                            //delete honeyDoDataModel
-                        } else {
+                        //delete honeyDoDataModel
+                        } else if (position == 1){
                             mDbAdapter.deleteReminderById(getIdFromPosition(masterListPosition));
                             mCursorAdapter.changeCursor(mDbAdapter.fetchAllReminders());
+                        //Datepicker Fragment
+                        } else {
+                            newFragment.show(getFragmentManager(), "datePicker");
                         }
                         dialog.dismiss();
                     }
@@ -138,7 +147,6 @@ public class HoneyDoListActivity extends Activity {
                     }
                     return false;
                 }
-
                 @Override
                 public void onDestroyActionMode(ActionMode mode) {
                 }
@@ -237,6 +245,12 @@ public class HoneyDoListActivity extends Activity {
         return true;
     }
 
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int day) {
+        //do some stuff for example write on log and update TextField on activity
+        Log.w("DatePicker","Date = " + year);
+        //((TextView) findViewById(R.id.textView1)).setText("Date = " + year + month + day);
+    }
 
 
 
