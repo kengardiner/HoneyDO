@@ -31,7 +31,8 @@
             android:padding="10dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:backgroundTint="@color/alpha_64" />
 
     </LinearLayout>
 

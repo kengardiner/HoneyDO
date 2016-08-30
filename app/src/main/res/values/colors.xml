@@ -11,6 +11,8 @@
     <color name="green">#003300</color>
     <color name="white">#7986cb</color>
     <color name="red">#ff0000</color>
-    <color name="Indigo">#7986cb</color>
+    <color name="Indigo">#37474f</color>
     <color name="Black">#000000</color>
+    <color name="alpha_128">#80ffffff</color>
+    <color name="alpha_64">#40ffffff</color>
 </resources>

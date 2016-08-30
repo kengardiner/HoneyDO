@@ -17,9 +17,10 @@
         android:layout_centerHorizontal="true"
         tools:listitem="@layout/list_row"
         android:divider="#000000"
-        android:dividerHeight="4dp"
+        android:dividerHeight="2dp"
         android:drawSelectorOnTop="true"
-        android:layout_weight="2" />
+        android:layout_weight="2"
+        android:elevation="20dp" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -28,7 +29,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="false"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:background="@color/alpha_128">
 
         <EditText
             android:layout_width="200dp"
