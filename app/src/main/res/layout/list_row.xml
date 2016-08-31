@@ -32,7 +32,23 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textStyle="bold"
-            android:backgroundTint="@color/alpha_64" />
+            android:backgroundTint="@color/alpha_64"
+            android:layout_weight="5" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/list_button"
+            android:id="@+id/date_text"
+            android:textColor="@color/Indigo"
+            android:textSize="20sp"
+            android:gravity="center_vertical"
+            android:padding="10dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textStyle="bold"
+            android:backgroundTint="@color/alpha_64"
+            android:layout_weight="10" />
 
     </LinearLayout>
 

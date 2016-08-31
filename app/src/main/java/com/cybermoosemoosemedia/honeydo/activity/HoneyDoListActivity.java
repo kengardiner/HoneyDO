@@ -44,13 +44,12 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
         mDbAdapter = new HoneyDoRemindersDbAdapter(this);
         mDbAdapter.open();
 
-
-/*        if (savedInstanceState == null) {
-            //Clear all data
+       if (savedInstanceState == null) {
+           //Clear all data
            mDbAdapter.deleteAllReminders();
-            //Add some data
-            insertSomeReminders();
-        }*/
+
+       }
+
 
 
         Cursor cursor = mDbAdapter.fetchAllReminders();
@@ -157,27 +156,6 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
     private int getIdFromPosition(int nC) {
         return (int) mCursorAdapter.getItemId(nC);
     }
-
-    private void insertSomeReminders() {
-        mDbAdapter.createReminder("Buy Learn Android Studio", true);
-        mDbAdapter.createReminder("Send Dad birthday gift", false);
-        mDbAdapter.createReminder("Dinner at the Gage on Friday", false);
-        mDbAdapter.createReminder("String squash racket", false);
-        mDbAdapter.createReminder("Shovel and salt walkways", false);
-        mDbAdapter.createReminder("Prepare Advanced Android syllabus", true);
-        mDbAdapter.createReminder("Buy new office chair", false);
-        mDbAdapter.createReminder("Call Auto-body shop for quote", false);
-        mDbAdapter.createReminder("Renew membership to club", false);
-        mDbAdapter.createReminder("Buy new Galaxy Android phone", true);
-        mDbAdapter.createReminder("Sell old Android phone - auction", false);
-        mDbAdapter.createReminder("Buy new paddles for kayaks", false);
-        mDbAdapter.createReminder("Call accountant about tax returns", false);
-        mDbAdapter.createReminder("Buy 300,000 shares of Google", false);
-        mDbAdapter.createReminder("Call the Dalai Lama back", true);
-
-
-    }
-
     private void fireCustomDialog(final HoneyDoDataModel reminder) {
 
 
@@ -206,11 +184,11 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
                 String reminderText = editCustom.getText().toString();
                 if (isEditOperation) {
                     HoneyDoDataModel reminderEdited = new HoneyDoDataModel(reminder.getId(),
-                            reminderText, checkBox.isChecked() ? 1 : 0);
+                            reminderText, checkBox.isChecked() ? 1 : 0, null);
                     mDbAdapter.updateReminder(reminderEdited);
                     //this is for new reminder
                 } else {
-                    mDbAdapter.createReminder(reminderText, checkBox.isChecked());
+                    mDbAdapter.createReminder(reminderText, checkBox.isChecked(), null);
                 }
                 mCursorAdapter.changeCursor(mDbAdapter.fetchAllReminders());
                 dialog.dismiss();
@@ -227,13 +205,12 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
         });
         dialog.show();
 
-
     }
 
     public void onAddItem(View v) {
         EditText etNewItem = (EditText) findViewById(R.id.editText);
         String itemText = etNewItem.getText().toString();
-        mDbAdapter.createReminder(itemText, true);
+        mDbAdapter.createReminder(itemText, true, null);
         mCursorAdapter.changeCursor(mDbAdapter.fetchAllReminders());
         etNewItem.setText("");
     }
@@ -245,14 +222,12 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
         return true;
     }
 
-    @Override
+
     public void onDateSet(DatePicker view, int year, int month, int day) {
         //do some stuff for example write on log and update TextField on activity
         Log.w("DatePicker","Date = " + year);
-        //((TextView) findViewById(R.id.textView1)).setText("Date = " + year + month + day);
+        ((TextView) findViewById(R.id.date_text)).setText("Date = " + year + month + day);
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

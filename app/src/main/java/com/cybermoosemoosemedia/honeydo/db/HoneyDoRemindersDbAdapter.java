@@ -14,10 +14,12 @@ public class HoneyDoRemindersDbAdapter {
     public static final String COL_ID = "_id";
     public static final String COL_CONTENT = "content";
     public static final String COL_IMPORTANT = "important";
+    public static final String COL_YEAR = "year";
     //these are the corresponding indices
     public static final int INDEX_ID = 0;
     public static final int INDEX_CONTENT = INDEX_ID + 1;
     public static final int INDEX_IMPORTANT = INDEX_ID + 2;
+    public static final int INDEX_YEAR = INDEX_ID + 3;
     //used for logging
     private static final String TAG = "HoneyDoRemindersDbAdapter";
     private DatabaseHelper mDbHelper;
@@ -31,7 +33,8 @@ public class HoneyDoRemindersDbAdapter {
             "CREATE TABLE if not exists " + TABLE_NAME + " ( " +
                     COL_ID + " INTEGER PRIMARY KEY autoincrement, " +
                     COL_CONTENT + " TEXT, " +
-                    COL_IMPORTANT + " INTEGER );";
+                    COL_IMPORTANT + " INTEGER, " +
+                    COL_YEAR + " TEXT );";
 
     public HoneyDoRemindersDbAdapter(Context ctx) {
         this.mCtx = ctx;
@@ -52,11 +55,13 @@ public class HoneyDoRemindersDbAdapter {
 
     //CREATE
     //id will be created automatically
-    public void createReminder(String name, boolean important) {
+    public void createReminder(String name, boolean important, String year) {
         ContentValues values = new ContentValues();
         values.put(COL_CONTENT, name);
         values.put(COL_IMPORTANT, important ? 1 : 0);
+        values.put(COL_YEAR, year);
         mDb.insert(TABLE_NAME, null, values);
+
     }
 
     //overloaded to take a honeyDoDataModel
@@ -64,7 +69,7 @@ public class HoneyDoRemindersDbAdapter {
         ContentValues values = new ContentValues();
         values.put(COL_CONTENT, honeyDoDataModel.getContent());
         values.put(COL_IMPORTANT, honeyDoDataModel.getImportant());
-
+        values.put(COL_YEAR, honeyDoDataModel.getYear());
         // Inserting Row
 
         return mDb.insert(TABLE_NAME, null, values);
@@ -74,7 +79,7 @@ public class HoneyDoRemindersDbAdapter {
     public HoneyDoDataModel fetchReminderById(int id) {
 
         Cursor cursor = mDb.query(TABLE_NAME, new String[]{COL_ID,
-                        COL_CONTENT, COL_IMPORTANT}, COL_ID + "=?",
+                        COL_CONTENT, COL_IMPORTANT, COL_YEAR}, COL_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null
         );
         if (cursor != null)
@@ -82,13 +87,14 @@ public class HoneyDoRemindersDbAdapter {
         return new HoneyDoDataModel(
                 cursor.getInt(INDEX_ID),
                 cursor.getString(INDEX_CONTENT),
-                cursor.getInt(INDEX_IMPORTANT)
+                cursor.getInt(INDEX_IMPORTANT),
+                cursor.getString(INDEX_YEAR)
         );
     }
 
     public Cursor fetchAllReminders() {
         Cursor mCursor = mDb.query(TABLE_NAME, new String[]{COL_ID,
-                        COL_CONTENT, COL_IMPORTANT},
+                        COL_CONTENT, COL_IMPORTANT, COL_YEAR},
                 null, null, null, null, null
         );
         if (mCursor != null) {
@@ -102,6 +108,7 @@ public class HoneyDoRemindersDbAdapter {
         ContentValues values = new ContentValues();
         values.put(COL_CONTENT, honeyDoDataModel.getContent());
         values.put(COL_IMPORTANT, honeyDoDataModel.getImportant());
+        values.put(COL_YEAR, honeyDoDataModel.getYear());
         mDb.update(TABLE_NAME, values,
                 COL_ID + "=?", new String[]{String.valueOf(honeyDoDataModel.getId())});
     }

@@ -4,13 +4,15 @@ public class HoneyDoDataModel {
     private int mId;
     private String mContent;
     private int mImportant;
+    private String mYear;
 
     //Data model for HoneyDo DB
 
-    public HoneyDoDataModel(int id, String content, int important) {
+    public HoneyDoDataModel(int id, String content, int important, String year) {
         mId = id;
         mImportant = important;
         mContent = content;
+        mYear = year;
     }
     public int getId() {
         return mId;
@@ -29,5 +31,11 @@ public class HoneyDoDataModel {
     }
     public void setContent(String content) {
         mContent = content;
+    }
+    public String getYear() {
+        return mYear;
+    }
+    public void setYear(String year) {
+        mYear = year;
     }
 }

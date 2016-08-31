@@ -2,8 +2,6 @@ package com.cybermoosemoosemedia.honeydo.db;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +28,6 @@ public class HoneyDoCursorAdapter extends SimpleCursorAdapter {
             holder.listTab = view.findViewById(R.id.row_tab);
             view.setTag(holder);
         }if (cursor.getInt(holder.colImp) > 0) {
-            //holder.listTab.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
             holder.listTab.setBackgroundResource(R.drawable.red_circle);
         } else {
             holder.listTab.setBackgroundResource(R.drawable.green_circle);
