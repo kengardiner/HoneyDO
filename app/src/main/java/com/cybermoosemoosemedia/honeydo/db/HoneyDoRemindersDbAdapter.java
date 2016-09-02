@@ -10,17 +10,17 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class HoneyDoRemindersDbAdapter {
 
-    //these are the column names
+    //column names
     public static final String COL_ID = "_id";
     public static final String COL_CONTENT = "content";
     public static final String COL_IMPORTANT = "important";
     public static final String COL_YEAR = "year";
-    //these are the corresponding indices
+    //corresponding indices
     public static final int INDEX_ID = 0;
     public static final int INDEX_CONTENT = INDEX_ID + 1;
     public static final int INDEX_IMPORTANT = INDEX_ID + 2;
     public static final int INDEX_YEAR = INDEX_ID + 3;
-    //used for logging
+    //logging
     private static final String TAG = "HoneyDoRemindersDbAdapter";
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;

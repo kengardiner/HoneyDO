@@ -5,9 +5,8 @@ import android.app.Dialog;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
+import android.support.v7.app.AlertDialog;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,11 +18,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.DatePicker;
 
 import com.cybermoosemoosemedia.honeydo.R;
 import com.cybermoosemoosemedia.honeydo.db.HoneyDoCursorAdapter;
@@ -35,29 +34,24 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
     private HoneyDoRemindersDbAdapter mDbAdapter;
     private HoneyDoCursorAdapter mCursorAdapter;
     DatePickerFragment newFragment = new DatePickerFragment();
+    String yearCurrent;
+    int nId;
+    HoneyDoDataModel honeyDoDataModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_honey_do_list);
+
         mListView = (ListView) findViewById(R.id.reminders_list_view);
         mDbAdapter = new HoneyDoRemindersDbAdapter(this);
         mDbAdapter.open();
 
-       if (savedInstanceState == null) {
-           //Clear all data
-           mDbAdapter.deleteAllReminders();
-
-       }
-
-
-
         Cursor cursor = mDbAdapter.fetchAllReminders();
         //from columns defined in the db
-        String[] from = new String[]{
-                HoneyDoRemindersDbAdapter.COL_CONTENT};
+        String[] from = new String[]{HoneyDoRemindersDbAdapter.COL_CONTENT,HoneyDoRemindersDbAdapter.COL_YEAR};
         //to the ids of views in the layout
-        int[] to = new int[]{R.id.row_text};
+        int[] to = new int[]{R.id.row_text,R.id.date_text};
 
         mCursorAdapter = new HoneyDoCursorAdapter(
                 //context
@@ -72,8 +66,7 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
                 to,
                 //flag - not used
                 0);
-        //the cursorAdapter (controller) is now updating the listView (view)
-        //with data from the db(model)
+
         mListView.setAdapter(mCursorAdapter);
 
         //when we click an individual item in the listview
@@ -93,9 +86,12 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         //edit reminder
+
+                        nId = getIdFromPosition(masterListPosition);
+                        honeyDoDataModel = mDbAdapter.fetchReminderById(nId);
+
                         if (position == 0) {
-                            int nId = getIdFromPosition(masterListPosition);
-                            HoneyDoDataModel honeyDoDataModel = mDbAdapter.fetchReminderById(nId);
+
                             fireCustomDialog(honeyDoDataModel);
                         //delete honeyDoDataModel
                         } else if (position == 1){
@@ -104,6 +100,7 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
                         //Datepicker Fragment
                         } else {
                             newFragment.show(getFragmentManager(), "datePicker");
+
                         }
                         dialog.dismiss();
                     }
@@ -224,23 +221,22 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
 
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        //do some stuff for example write on log and update TextField on activity
-        Log.w("DatePicker","Date = " + year);
-        ((TextView) findViewById(R.id.date_text)).setText("Date = " + year + month + day);
+        //save year
+        yearCurrent = ""+year;
+        //set date
+        fireDate(honeyDoDataModel, nId);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_new:
-                //create new HoneyDoDataModel
-         //       fireCustomDialog(null);
-                return true;
-            case R.id.action_exit:
-                finish();
-                return true;
-            default:
-                return false;
-        }
-    }
+
+
+    private void fireDate(final HoneyDoDataModel reminder, final int masterListPosition) {
+                    //add date to record
+                    HoneyDoDataModel reminderEdited = new HoneyDoDataModel(reminder.getId(),
+                            reminder.getContent(), reminder.getImportant(), yearCurrent);
+                    //update record
+                    mDbAdapter.updateReminder(reminderEdited);
+                    mCursorAdapter.changeCursor(mDbAdapter.fetchAllReminders());
+                    //clear date
+                    yearCurrent = "";
+            };
 }
