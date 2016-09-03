@@ -34,8 +34,9 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
     private HoneyDoRemindersDbAdapter mDbAdapter;
     private HoneyDoCursorAdapter mCursorAdapter;
     DatePickerFragment newFragment = new DatePickerFragment();
-    String yearCurrent;
+
     int nId;
+    Integer rDay; Integer rMonth; Integer rYear;
     HoneyDoDataModel honeyDoDataModel;
 
     @Override
@@ -91,7 +92,6 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
                         honeyDoDataModel = mDbAdapter.fetchReminderById(nId);
 
                         if (position == 0) {
-
                             fireCustomDialog(honeyDoDataModel);
                         //delete honeyDoDataModel
                         } else if (position == 1){
@@ -181,11 +181,12 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
                 String reminderText = editCustom.getText().toString();
                 if (isEditOperation) {
                     HoneyDoDataModel reminderEdited = new HoneyDoDataModel(reminder.getId(),
-                            reminderText, checkBox.isChecked() ? 1 : 0, null);
+                            reminderText, checkBox.isChecked() ? 1 : 0,reminder.getDay(),reminder.getMonth(),reminder.getYear());
                     mDbAdapter.updateReminder(reminderEdited);
+                    //findViewById(R.id.date_text).setVisibility(View.INVISIBLE);
                     //this is for new reminder
                 } else {
-                    mDbAdapter.createReminder(reminderText, checkBox.isChecked(), null);
+                    mDbAdapter.createReminder(reminderText, checkBox.isChecked(), 0,0,0);
                 }
                 mCursorAdapter.changeCursor(mDbAdapter.fetchAllReminders());
                 dialog.dismiss();
@@ -207,7 +208,7 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
     public void onAddItem(View v) {
         EditText etNewItem = (EditText) findViewById(R.id.editText);
         String itemText = etNewItem.getText().toString();
-        mDbAdapter.createReminder(itemText, true, null);
+        mDbAdapter.createReminder(itemText, true, null,null,null);
         mCursorAdapter.changeCursor(mDbAdapter.fetchAllReminders());
         etNewItem.setText("");
     }
@@ -221,8 +222,11 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
 
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        //save year
-        yearCurrent = ""+year;
+        //save day, month, year
+        rDay = day;
+        rMonth = month;
+        rYear = year;
+
         //set date
         fireDate(honeyDoDataModel, nId);
     }
@@ -232,11 +236,11 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
     private void fireDate(final HoneyDoDataModel reminder, final int masterListPosition) {
                     //add date to record
                     HoneyDoDataModel reminderEdited = new HoneyDoDataModel(reminder.getId(),
-                            reminder.getContent(), reminder.getImportant(), yearCurrent);
+                            reminder.getContent(), reminder.getImportant(), rDay, rMonth, rYear);
                     //update record
                     mDbAdapter.updateReminder(reminderEdited);
                     mCursorAdapter.changeCursor(mDbAdapter.fetchAllReminders());
                     //clear date
-                    yearCurrent = "";
-            };
+                    rDay = 0; rMonth = 0; rYear =0;
+            }
 }
