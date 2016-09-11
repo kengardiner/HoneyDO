@@ -100,7 +100,7 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
 
                         if (position == 0) {
                             FragmentManager fm = getSupportFragmentManager();
-                            EditNameDialogFragment editNameDialogFragment = EditNameDialogFragment.newInstance(nId, honeyDoDataModel, "Some Title");
+                            EditNameDialogFragment editNameDialogFragment = EditNameDialogFragment.newInstance(nId, honeyDoDataModel);
                             editNameDialogFragment.show(fm, "fragment_edit");
                         } else if (position == 1) {
                             mDbAdapter.deleteReminderById(getIdFromPosition(masterListPosition));
@@ -152,7 +152,7 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
     //Returned from Dialog Fragment
     @Override
     public void onDialogMessage(String message, int checked) {
-        Toast.makeText(this, message + " " + checked, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, message + " " + checked, Toast.LENGTH_SHORT).show();
         fireEdited(honeyDoDataModel,checked, message);
     }
 

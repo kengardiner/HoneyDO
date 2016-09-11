@@ -40,10 +40,9 @@ public class EditNameDialogFragment extends DialogFragment implements View.OnCli
         // Use `newInstance` instead as shown below
     }
 
-    public static EditNameDialogFragment newInstance(int nId,HoneyDoDataModel reminder, String title) {
+    public static EditNameDialogFragment newInstance(int nId,HoneyDoDataModel reminder) {
         EditNameDialogFragment frag = new EditNameDialogFragment();
         Bundle args = new Bundle();
-        args.putString("title", title);
         args.putString("reminder", reminder.getContent());
         args.putInt("checked", reminder.getImportant());
         frag.setArguments(args);
@@ -83,7 +82,7 @@ public class EditNameDialogFragment extends DialogFragment implements View.OnCli
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // Get field from view
+        // Get fields from view
         mCustomEditReminder = (EditText) view.findViewById(R.id.custom_edit_reminder);
         mCustomCheckBox = (CheckBox) view.findViewById(R.id.custom_check_box);
         // Fetch arguments from bundle and set content
@@ -91,9 +90,7 @@ public class EditNameDialogFragment extends DialogFragment implements View.OnCli
         mCustomEditReminder.setText(content);
         //Fetch arguments and set important
         Boolean important;
-
         important = getArguments().getInt("checked") == 1;
-
         mCustomCheckBox.setChecked(important);
         // Show soft keyboard automatically and request focus to field
         mCustomEditReminder.requestFocus();
