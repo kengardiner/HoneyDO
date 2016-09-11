@@ -1,12 +1,13 @@
-package com.cybermoosemoosemedia.honeydo.db;
+package com.cybermoosemoosemedia.honeydo.adapter;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.cybermoosemoosemedia.honeydo.model.HoneyDoDataModel;
 
 public class HoneyDoRemindersDbAdapter {
 
@@ -26,12 +27,9 @@ public class HoneyDoRemindersDbAdapter {
     public static final int INDEX_YEAR = INDEX_ID + 5;
     //logging
     private static final String TAG = "HoneyDoRemindersDbAdapter";
-    private DatabaseHelper mDbHelper;
-    private SQLiteDatabase mDb;
     private static final String DATABASE_NAME = "dba_honeydo";
     private static final String TABLE_NAME = "tbl_honeydo";
     private static final int DATABASE_VERSION = 3;
-    private final Context mCtx;
     //SQL statement used to create the database
     private static final String DATABASE_CREATE =
             "CREATE TABLE if not exists " + TABLE_NAME + " ( " +
@@ -41,6 +39,9 @@ public class HoneyDoRemindersDbAdapter {
                     COL_DAY + " INTEGER, " +
                     COL_MONTH + " INTEGER, " +
                     COL_YEAR + " INTEGER );";
+    private final Context mCtx;
+    private DatabaseHelper mDbHelper;
+    private SQLiteDatabase mDb;
 
     public HoneyDoRemindersDbAdapter(Context ctx) {
         this.mCtx = ctx;
@@ -92,6 +93,8 @@ public class HoneyDoRemindersDbAdapter {
                         COL_CONTENT, COL_IMPORTANT, COL_DAY, COL_MONTH, COL_YEAR}, COL_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null
         );
+
+
         if (cursor != null)
             cursor.moveToFirst();
         return new HoneyDoDataModel(
@@ -102,6 +105,7 @@ public class HoneyDoRemindersDbAdapter {
                 cursor.getInt(INDEX_MONTH),
                 cursor.getInt(INDEX_YEAR)
         );
+
     }
 
     public Cursor fetchAllReminders() {

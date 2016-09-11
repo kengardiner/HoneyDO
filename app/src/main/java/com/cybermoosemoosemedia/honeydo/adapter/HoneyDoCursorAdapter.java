@@ -1,4 +1,4 @@
-package com.cybermoosemoosemedia.honeydo.db;
+package com.cybermoosemoosemedia.honeydo.adapter;
 
 import android.content.Context;
 import android.database.Cursor;

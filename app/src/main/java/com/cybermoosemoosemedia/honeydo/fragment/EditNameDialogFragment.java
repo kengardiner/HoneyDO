@@ -1,10 +1,5 @@
-package com.cybermoosemoosemedia.honeydo.activity;
+package com.cybermoosemoosemedia.honeydo.fragment;
 
-/**
- * Created by ken_g on 8/29/2016.
- */
-
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,7 +13,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.cybermoosemoosemedia.honeydo.R;
-import com.cybermoosemoosemedia.honeydo.db.HoneyDoDataModel;
+import com.cybermoosemoosemedia.honeydo.model.HoneyDoDataModel;
 // ...
 
 public class EditNameDialogFragment extends DialogFragment implements View.OnClickListener {
@@ -27,12 +22,6 @@ public class EditNameDialogFragment extends DialogFragment implements View.OnCli
     CheckBox mCustomCheckBox;
     Button mCustomButtonCancel, mCustomButtonCommit;
     Communicator communicator;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        communicator = (Communicator) context;
-    }
 
     public EditNameDialogFragment() {
         // Empty constructor is required for DialogFragment
@@ -47,6 +36,12 @@ public class EditNameDialogFragment extends DialogFragment implements View.OnCli
         args.putInt("checked", reminder.getImportant());
         frag.setArguments(args);
         return frag;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        communicator = (Communicator) context;
     }
 
     @Override
@@ -98,7 +93,7 @@ public class EditNameDialogFragment extends DialogFragment implements View.OnCli
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
-    interface Communicator
+    public interface Communicator
     {
         void onDialogMessage(String message, int checkBox);
     }

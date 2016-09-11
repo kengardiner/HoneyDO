@@ -1,4 +1,4 @@
-package com.cybermoosemoosemedia.honeydo.db;
+package com.cybermoosemoosemedia.honeydo.model;
 
 public class HoneyDoDataModel {
     private int mId;

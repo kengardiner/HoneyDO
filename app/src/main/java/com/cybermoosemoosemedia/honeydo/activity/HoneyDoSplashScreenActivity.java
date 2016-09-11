@@ -7,13 +7,8 @@ import android.os.Handler;
 
 import com.cybermoosemoosemedia.honeydo.R;
 
-
-/**
- * Created by ken on 8/27/16.
- */
 public class HoneyDoSplashScreenActivity extends Activity {
-
-        int SPLASH_TIMER = 3000;
+    int SPLASH_TIMER = 2000;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +21,6 @@ public class HoneyDoSplashScreenActivity extends Activity {
                 public void run() {
                     Intent i = new Intent(HoneyDoSplashScreenActivity.this, HoneyDoListActivity.class);
                     startActivity(i);
-
-                    // close this activity
                     finish();
                 }
             }, SPLASH_TIMER);
