@@ -41,4 +41,7 @@ public class DatePickerFragment extends DialogFragment {
 
     }
 
+    public interface EditNameDialogListener {
+        void onFinishEditDialog(String inputText);
+    }
 }
