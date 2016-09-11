@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cybermoosemoosemedia.honeydo.R;
 import com.cybermoosemoosemedia.honeydo.db.HoneyDoCursorAdapter;
@@ -32,14 +33,13 @@ import com.cybermoosemoosemedia.honeydo.db.HoneyDoRemindersDbAdapter;
 
 import java.util.Calendar;
 
-public class HoneyDoListActivity extends FragmentActivity implements DatePickerDialog.OnDateSetListener {
+public class HoneyDoListActivity extends FragmentActivity implements DatePickerDialog.OnDateSetListener, EditNameDialogFragment.Communicator {
     private ListView mListView;
     private HoneyDoRemindersDbAdapter mDbAdapter;
     private HoneyDoCursorAdapter mCursorAdapter;
     DatePickerFragment newFragment = new DatePickerFragment();
 
     int nId;
-    Integer rDay; Integer rMonth; Integer rYear;
     HoneyDoDataModel honeyDoDataModel;
 
     @Override
@@ -53,9 +53,9 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
 
         Cursor cursor = mDbAdapter.fetchAllReminders();
         //from columns defined in the db
-        String[] from = new String[]{HoneyDoRemindersDbAdapter.COL_CONTENT,HoneyDoRemindersDbAdapter.COL_MONTH,HoneyDoRemindersDbAdapter.COL_DAY,HoneyDoRemindersDbAdapter.COL_YEAR};
+        String[] from = new String[]{HoneyDoRemindersDbAdapter.COL_CONTENT, HoneyDoRemindersDbAdapter.COL_MONTH, HoneyDoRemindersDbAdapter.COL_DAY, HoneyDoRemindersDbAdapter.COL_YEAR};
         //to the ids of views in the layout
-        int[] to = new int[]{R.id.row_text,R.id.month,R.id.day,R.id.year};
+        int[] to = new int[]{R.id.row_text, R.id.month, R.id.day, R.id.year};
 
         mCursorAdapter = new HoneyDoCursorAdapter(
                 //context
@@ -94,128 +94,35 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
                         nId = getIdFromPosition(masterListPosition);
                         honeyDoDataModel = mDbAdapter.fetchReminderById(nId);
                         Calendar dueCal = Calendar.getInstance();
-                        dueCal.set(honeyDoDataModel.getYear(),honeyDoDataModel.getMonth(),honeyDoDataModel.getDay());
+                        dueCal.set(honeyDoDataModel.getYear(), honeyDoDataModel.getMonth(), honeyDoDataModel.getDay());
                         Bundle dueDate = new Bundle();
                         dueDate.putLong("dueDate", dueCal.getTimeInMillis());
 
                         if (position == 0) {
                             FragmentManager fm = getSupportFragmentManager();
-                            EditNameDialogFragment editNameDialogFragment = EditNameDialogFragment.newInstance(nId, honeyDoDataModel,"Some Title");
-                            editNameDialogFragment.show(fm, "fragment_edit_name");
-                           // fireCustomDialog(honeyDoDataModel);
-                        //delete honeyDoDataModel
-                        } else if (position == 1){
+                            EditNameDialogFragment editNameDialogFragment = EditNameDialogFragment.newInstance(nId, honeyDoDataModel, "Some Title");
+                            editNameDialogFragment.show(fm, "fragment_edit");
+                        } else if (position == 1) {
                             mDbAdapter.deleteReminderById(getIdFromPosition(masterListPosition));
                             mCursorAdapter.changeCursor(mDbAdapter.fetchAllReminders());
-                        //Datepicker Fragment
+                            //Datepicker Fragment
                         } else {
                             newFragment.setArguments(dueDate);
                             newFragment.show(getFragmentManager(), "datePicker");
-
                         }
                         dialog.dismiss();
                     }
                 });
             }
         });
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-            mListView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
-                @Override
-                public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean
-                        checked) {
-                }
-
-                @Override
-                public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                    MenuInflater inflater = mode.getMenuInflater();
-                    inflater.inflate(R.menu.cam_menu, menu);
-                    return true;
-                }
-
-                @Override
-                public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                    return false;
-                }
-
-                @Override
-                public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.menu_item_delete_reminder:
-                            for (int nC = mCursorAdapter.getCount() - 1; nC >= 0; nC--) {
-                                if (mListView.isItemChecked(nC)) {
-                                    mDbAdapter.deleteReminderById(getIdFromPosition(nC));
-                                }
-                            }
-                            mode.finish();
-                            mCursorAdapter.changeCursor(mDbAdapter.fetchAllReminders());
-                            return true;
-                    }
-                    return false;
-                }
-                @Override
-                public void onDestroyActionMode(ActionMode mode) {
-                }
-            });
-        }
     }
 
+    //Returns ID of Item
     private int getIdFromPosition(int nC) {
         return (int) mCursorAdapter.getItemId(nC);
     }
-    private void fireCustomDialog(final HoneyDoDataModel reminder) {
 
-
-        // custom dialog
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_custom);
-        TextView titleView = (TextView) dialog.findViewById(R.id.custom_title);
-        final EditText editCustom = (EditText) dialog.findViewById(R.id.custom_edit_reminder);
-        Button commitButton = (Button) dialog.findViewById(R.id.custom_button_commit);
-        final CheckBox checkBox = (CheckBox) dialog.findViewById(R.id.custom_check_box);
-        LinearLayout rootLayout = (LinearLayout) dialog.findViewById(R.id.custom_root_layout);
-        final boolean isEditOperation = (reminder != null);
-        //this is for an edit
-        if (isEditOperation) {
-            titleView.setText("Edit Item");
-            checkBox.setChecked(reminder.getImportant() == 1);
-            editCustom.setText(reminder.getContent());
-            rootLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-        }
-
-
-        commitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String reminderText = editCustom.getText().toString();
-                if (isEditOperation) {
-                    HoneyDoDataModel reminderEdited = new HoneyDoDataModel(reminder.getId(),
-                            reminderText, checkBox.isChecked() ? 1 : 0,reminder.getDay(),reminder.getMonth(),reminder.getYear());
-                    mDbAdapter.updateReminder(reminderEdited);
-                    //findViewById(R.id.date_text).setVisibility(View.INVISIBLE);
-                    //this is for new reminder
-                } else {
-                    mDbAdapter.createReminder(reminderText, checkBox.isChecked(), 0,0,0);
-                }
-                mCursorAdapter.changeCursor(mDbAdapter.fetchAllReminders());
-                dialog.dismiss();
-            }
-        });
-
-
-        Button buttonCancel = (Button) dialog.findViewById(R.id.custom_button_cancel);
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-
-    }
-
+    //Onlick listener from Add Item Button
     public void onAddItem(View v) {
         EditText etNewItem = (EditText) findViewById(R.id.editText);
         String itemText = etNewItem.getText().toString();
@@ -224,36 +131,54 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
         etNewItem.setText("");
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_reminders, menu);
-        return true;
-    }
 
-
+    //Returned from DatePickerFragment
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        //set (r)eturned rDay, rMonth, rYear
-        rDay = day;
-        rMonth = month;
-        rYear = year;
-
         //set date
-        fireDate(honeyDoDataModel, nId);
+        fireDate(honeyDoDataModel, nId, day, month, year);
     }
 
 
-
-    private void fireDate(final HoneyDoDataModel reminder, final int masterListPosition) {
+    //Change date on record
+    private void fireDate(final HoneyDoDataModel reminder, final int masterListPosition, int day, int month, int year) {
                     //add date to record
                     HoneyDoDataModel reminderEdited = new HoneyDoDataModel(reminder.getId(),
-                            reminder.getContent(), reminder.getImportant(), rDay, rMonth, rYear);
+                            reminder.getContent(), reminder.getImportant(), day, month, year);
                     //update record
                     mDbAdapter.updateReminder(reminderEdited);
                     mCursorAdapter.changeCursor(mDbAdapter.fetchAllReminders());
-                    //clear date
-                    rDay = 0; rMonth = 0; rYear =0;
             }
 
+    //Returned from Dialog Fragment
+    @Override
+    public void onDialogMessage(String message, int checked) {
+        Toast.makeText(this, message + " " + checked, Toast.LENGTH_SHORT).show();
+        fireEdited(honeyDoDataModel,checked, message);
+    }
 
+    //Edit record after returning from Dialog Fragment
+    private void fireEdited (final HoneyDoDataModel reminder, int checked, String itemText) {
+        Integer day, month, year;
+
+        //Issue with 0s showing up in edited records. Resolved by setting nulls.
+        if (reminder.getDay()==0)
+            {day = null;}
+        else
+            {day = reminder.getDay();}
+
+        if (reminder.getMonth()==0)
+            {month = null;}
+        else
+            {month= reminder.getMonth();}
+
+        if (reminder.getYear()==0)
+            {year = null;}
+        else
+            {year = reminder.getYear();}
+
+        HoneyDoDataModel reminderEdited = new HoneyDoDataModel(reminder.getId(),
+                itemText, checked, day, month, year);
+        mDbAdapter.updateReminder(reminderEdited);
+        mCursorAdapter.changeCursor(mDbAdapter.fetchAllReminders());
+    }
 }
