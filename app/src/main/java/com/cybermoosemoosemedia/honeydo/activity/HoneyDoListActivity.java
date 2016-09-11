@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -29,6 +30,8 @@ import com.cybermoosemoosemedia.honeydo.db.HoneyDoCursorAdapter;
 import com.cybermoosemoosemedia.honeydo.db.HoneyDoDataModel;
 import com.cybermoosemoosemedia.honeydo.db.HoneyDoRemindersDbAdapter;
 
+import java.util.Calendar;
+
 public class HoneyDoListActivity extends FragmentActivity implements DatePickerDialog.OnDateSetListener {
     private ListView mListView;
     private HoneyDoRemindersDbAdapter mDbAdapter;
@@ -50,9 +53,9 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
 
         Cursor cursor = mDbAdapter.fetchAllReminders();
         //from columns defined in the db
-        String[] from = new String[]{HoneyDoRemindersDbAdapter.COL_CONTENT,HoneyDoRemindersDbAdapter.COL_YEAR};
+        String[] from = new String[]{HoneyDoRemindersDbAdapter.COL_CONTENT,HoneyDoRemindersDbAdapter.COL_MONTH,HoneyDoRemindersDbAdapter.COL_DAY,HoneyDoRemindersDbAdapter.COL_YEAR};
         //to the ids of views in the layout
-        int[] to = new int[]{R.id.row_text,R.id.date_text};
+        int[] to = new int[]{R.id.row_text,R.id.month,R.id.day,R.id.year};
 
         mCursorAdapter = new HoneyDoCursorAdapter(
                 //context
@@ -76,7 +79,7 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
             public void onItemClick(AdapterView<?> parent, View view, final int masterListPosition, long id) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(HoneyDoListActivity.this);
                 ListView modeListView = new ListView(HoneyDoListActivity.this);
-                String[] modes = new String[]{"Edit Entry", "Delete Entry", "Add Due Date"};
+                String[] modes = new String[]{"Edit Entry", "Delete Entry", "Add/Edit Due Date"};
                 ArrayAdapter<String> modeAdapter = new ArrayAdapter<>(HoneyDoListActivity.this,
                         android.R.layout.simple_list_item_1, android.R.id.text1, modes);
                 modeListView.setAdapter(modeAdapter);
@@ -90,15 +93,23 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
 
                         nId = getIdFromPosition(masterListPosition);
                         honeyDoDataModel = mDbAdapter.fetchReminderById(nId);
+                        Calendar dueCal = Calendar.getInstance();
+                        dueCal.set(honeyDoDataModel.getYear(),honeyDoDataModel.getMonth(),honeyDoDataModel.getDay());
+                        Bundle dueDate = new Bundle();
+                        dueDate.putLong("dueDate", dueCal.getTimeInMillis());
 
                         if (position == 0) {
-                            fireCustomDialog(honeyDoDataModel);
+                            FragmentManager fm = getSupportFragmentManager();
+                            EditNameDialogFragment editNameDialogFragment = EditNameDialogFragment.newInstance(nId, honeyDoDataModel,"Some Title");
+                            editNameDialogFragment.show(fm, "fragment_edit_name");
+                           // fireCustomDialog(honeyDoDataModel);
                         //delete honeyDoDataModel
                         } else if (position == 1){
                             mDbAdapter.deleteReminderById(getIdFromPosition(masterListPosition));
                             mCursorAdapter.changeCursor(mDbAdapter.fetchAllReminders());
                         //Datepicker Fragment
                         } else {
+                            newFragment.setArguments(dueDate);
                             newFragment.show(getFragmentManager(), "datePicker");
 
                         }
@@ -222,7 +233,7 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
 
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        //save day, month, year
+        //set (r)eturned rDay, rMonth, rYear
         rDay = day;
         rMonth = month;
         rYear = year;
@@ -243,4 +254,6 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
                     //clear date
                     rDay = 0; rMonth = 0; rYear =0;
             }
+
+
 }

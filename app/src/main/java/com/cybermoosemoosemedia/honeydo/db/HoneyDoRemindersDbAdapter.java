@@ -106,7 +106,7 @@ public class HoneyDoRemindersDbAdapter {
 
     public Cursor fetchAllReminders() {
         Cursor mCursor = mDb.query(TABLE_NAME, new String[]{COL_ID,
-                        COL_CONTENT, COL_IMPORTANT, COL_YEAR},
+                        COL_CONTENT, COL_IMPORTANT, COL_YEAR, COL_MONTH, COL_DAY},
                 null, null, null, null, null
         );
         if (mCursor != null) {

@@ -14,14 +14,31 @@ public class DatePickerFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current time as the default values for the picker
         final Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
+        int year;
+        int month;
+        int day;
+
+        //get previously used date if there is one
+        long dueDate;
+        Bundle due = this.getArguments();
+
+        if (due != null) {
+            dueDate = due.getLong("dueDate");
+
+            if (dueDate > 0) {
+                c.setTimeInMillis(dueDate);
+            }
+        }
+
+        year = c.get(Calendar.YEAR);
+        month = c.get(Calendar.MONTH);
+        day = c.get(Calendar.DAY_OF_MONTH);
 
         // Activity needs to implement this interface
         DatePickerDialog.OnDateSetListener listener = (DatePickerDialog.OnDateSetListener) getActivity();
-
         // Create a new instance of TimePickerDialog and return it
-        return new DatePickerDialog(getActivity(), listener, year, month, day);
+        return new DatePickerDialog(getActivity(), (HoneyDoListActivity)getActivity(), year, month, day);
+
     }
+
 }
