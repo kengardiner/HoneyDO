@@ -18,12 +18,12 @@ import com.cybermoosemoosemedia.honeydo.R;
 import com.cybermoosemoosemedia.honeydo.adapter.HoneyDoCursorAdapter;
 import com.cybermoosemoosemedia.honeydo.adapter.HoneyDoRemindersDbAdapter;
 import com.cybermoosemoosemedia.honeydo.fragment.DatePickerFragment;
-import com.cybermoosemoosemedia.honeydo.fragment.EditNameDialogFragment;
+import com.cybermoosemoosemedia.honeydo.fragment.EditReminderDialogFragment;
 import com.cybermoosemoosemedia.honeydo.model.HoneyDoDataModel;
 
 import java.util.Calendar;
 
-public class HoneyDoListActivity extends FragmentActivity implements DatePickerDialog.OnDateSetListener, EditNameDialogFragment.Communicator {
+public class HoneyDoListActivity extends FragmentActivity implements DatePickerDialog.OnDateSetListener, EditReminderDialogFragment.Communicator {
     DatePickerFragment newFragment = new DatePickerFragment();
     int nId;
     HoneyDoDataModel honeyDoDataModel;
@@ -88,8 +88,8 @@ public class HoneyDoListActivity extends FragmentActivity implements DatePickerD
 
                         if (position == 0) {
                             FragmentManager fm = getSupportFragmentManager();
-                            EditNameDialogFragment editNameDialogFragment = EditNameDialogFragment.newInstance(nId, honeyDoDataModel);
-                            editNameDialogFragment.show(fm, "fragment_edit");
+                            EditReminderDialogFragment editReminderDialogFragment = EditReminderDialogFragment.newInstance(nId, honeyDoDataModel);
+                            editReminderDialogFragment.show(fm, "fragment_edit");
                         } else if (position == 1) {
                             mDbAdapter.deleteReminderById(getIdFromPosition(masterListPosition));
                             mCursorAdapter.changeCursor(mDbAdapter.fetchAllReminders());

@@ -14,23 +14,22 @@ import android.widget.EditText;
 
 import com.cybermoosemoosemedia.honeydo.R;
 import com.cybermoosemoosemedia.honeydo.model.HoneyDoDataModel;
-// ...
 
-public class EditNameDialogFragment extends DialogFragment implements View.OnClickListener {
+public class EditReminderDialogFragment extends DialogFragment implements View.OnClickListener {
 
     EditText mCustomEditReminder;
     CheckBox mCustomCheckBox;
     Button mCustomButtonCancel, mCustomButtonCommit;
     Communicator communicator;
 
-    public EditNameDialogFragment() {
+    public EditReminderDialogFragment() {
         // Empty constructor is required for DialogFragment
         // Make sure not to add arguments to the constructor
         // Use `newInstance` instead as shown below
     }
 
-    public static EditNameDialogFragment newInstance(int nId,HoneyDoDataModel reminder) {
-        EditNameDialogFragment frag = new EditNameDialogFragment();
+    public static EditReminderDialogFragment newInstance(int nId, HoneyDoDataModel reminder) {
+        EditReminderDialogFragment frag = new EditReminderDialogFragment();
         Bundle args = new Bundle();
         args.putString("reminder", reminder.getContent());
         args.putInt("checked", reminder.getImportant());
@@ -64,11 +63,15 @@ public class EditNameDialogFragment extends DialogFragment implements View.OnCli
     public void onClick(View view) {
         if (view.getId()==R.id.custom_button_commit)
         {
+            getDialog().getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             communicator.onDialogMessage(mCustomEditReminder.getText().toString(), mCustomCheckBox.isChecked() ? 1 : 0);
             dismiss();
         }
         else
         {
+            getDialog().getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             dismiss();
         }
     }
@@ -89,8 +92,8 @@ public class EditNameDialogFragment extends DialogFragment implements View.OnCli
         mCustomCheckBox.setChecked(important);
         // Show soft keyboard automatically and request focus to field
         mCustomEditReminder.requestFocus();
-        getDialog().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+/*        getDialog().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);*/
     }
 
     public interface Communicator
