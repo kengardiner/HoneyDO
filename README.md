@@ -1,10 +1,10 @@
 # Pre-work - HoneyDO
 
-HoneyDO is an android app that allows building a todo list and basic todo items management functionality including adding new items, editing and deleting an existing items, as well as the ability to denote important items as well as add due dates.
+HoneyDO is an Android app that allows building a todo list and basic todo items management functionality including adding new items, editing and deleting a existing items, as well as the ability to denote important items and add due dates.
 
 Submitted by: Ken Gardiner
 
-Time spent: 14
+Time spent: 14 hours
 
 ## User Stories
 
@@ -25,14 +25,14 @@ The following **optional** features are implemented:
 
 The following **additional** features are implemented:
 
-* [X} Splashscreen!
+* [X] Splashscreen!
 * [X] Transparancy, gradients, custom graphics!
 
 ## Video Walkthrough 
 
 Here's a walkthrough of implemented user stories:
 
-<blockquote class="imgur-embed-pub" lang="en" data-id="a/HyIbQ"><a href="//imgur.com/HyIbQ"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+<a href="http://imgur.com/a/HyIbQ">HoneyDO GIF Demo and Screenshot</a>
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
