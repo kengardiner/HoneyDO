@@ -1,6 +1,6 @@
 # Pre-work - HoneyDO
 
-HoneyDO is an Android app that allows building a todo list and basic todo items management functionality including adding new items, editing and deleting a existing items, as well as the ability to denote important items and add due dates.
+HoneyDO is an Android app that allows building a todo list and basic todo items management functionality including adding new items, editing and deleting existing items, as well as the ability to denote important items and add due dates.
 
 Submitted by: Ken Gardiner
 
